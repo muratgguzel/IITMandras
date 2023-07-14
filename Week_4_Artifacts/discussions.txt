@@ -1,0 +1,109 @@
+RDBMS (Relational Database Management System)
+ - Entity Relationship is supported OOB for
+   cosumers of this database by the database
+   provider.
+SQLServer, MySQL, Oracle, DB2, PostgreSQL
+
+When to use RDBMS?
+ - Cost Effectiveness
+ - Data is structured (aligned to a fixed 
+                       Schema)
+ - Your Application expects Relationship
+   amongst different entities.
+
+RDBMS is NOT Bad.
+===========================================
+RDBMS
+
+Database -> Place holder for Storage
+Tables -> Collection of Entitties with in a 
+          Database
+Record -> Unique Representation of an entity
+Rows -> Collection of "Record"
+Columns -> Collection of fixed "fields / 
+           "Schema" available for that table
+
+Example : Organization Database, which has 
+          Employee Table, Salaray Table
+          Employee Table has -> ID, Name, Address
+          Salaray Table has -> ID, E-ID, Salaray
+=================================
+Key :- Something to uniquely detect data.
+
+Primary Key :- Any number of columns that
+               Uniquely Identifies a "ROW".
+Example : EMP-ID in an employee table.
+
+Foreign Key :- This is a PK for another table
+               and indicates ER between the 2.
+=================================
+Constraints : Restrictions / limit
+
+Not NULL : Ensures data is NOT inserted with
+           NULL values.
+Unique: Ensures data is unique 
+        across the all columns.
+
+Default: Populate data with a default value.
+
+Check: Validations / Business Logic against
+       columns [ Not Recommended and can be
+       used as back channel for PROD Issues ]
+================================
+Index
+This is a means to access data faster.
+ - This is a dedicated storage that contains
+   meta data for the means to access faster.
+ - Indexing can also be costly at times.
+
+Composite Index
+This is a means to access data faster using
+a combination of 2 or more keys.
+
+
+Constraints ADD additional validation
+or WORK to a RDBMS DB.
+=======================================
+MySQL Database is part of RDBM Family.
+SQL Queries : Basic SQL Statements
+How to create a database
+CREATE DATABASE <Name>
+
+Table Creation
+ 1. From Workbench UI -> Extract the Queries
+ 2. Execute the queries in WorkBench
+CRUD Operations on MySQL Database
+C - Create
+INSERT INTO <TableName> values
+(comma seperated based on columns),
+(comma seperated based on columns),
+(comma seperated based on columns),
+(comma seperated based on columns),
+(comma seperated based on columns)
+
+R - Read
+SELECT * FROM <TableName>
+
+U - Update
+Change a set of column values in an 
+existing record.
+UPDATE <TableName>
+SET <ColumnName> = <NewValue>
+
+D - Delete
+DELETE FROM <TableName>
+Condition
+
+Filter Keywords
+Where, IN,...
+
+JOIN Keyword
+ - This is used to extract data 
+   from 2 tables
+===========================================
+How do we manage Table Update in Real world?
+ - Scripts :- DBA does the DB Schema Updates.
+ - Code First Journey
+    - Services Responsible for doing CRUD Operations
+       -Create DB, Table and Initial Data set.
+Entity Framework

@@ -1,0 +1,92 @@
+RDBMS
+ - Relational Database Mgmt Systems
+Database - Persistent Storage name.
+Example : Customer DB.
+Table:
+Different entities associated with a DB.
+Example : Address Table, UserTable etc.
+Entity - A representation of a real life object
+         that is used to solve a problem.
+Users, Address, Orders
+
+What?
+ - Data is Structured/ driven by Schema.
+    - Data is bound by the boundaries
+      Rows and Columns in a Table. 
+ - Supports Relationships across Tables.
+    - 2 Tables can be related. This
+      functionality is provided OOB by
+      RDBMS Provider. 
+
+Examples of RDBMS Provider
+ - SQL Server
+ - Oracle
+ - MySQL
+ - PostgreSQL
+ - Maria DB
+===========================================
+A Column -> Represents the "Specific Attribute"
+A Row -> Represent the "Specific Record"
+
+==================
+Primary Key
+ - Is the column that uniquely identifies a ROW
+Industry Standards
+UUID is the standard/recommended datatype
+   for a PK in a Table.
+Example:
+Customer Table
+Id - UUID (3d12e01c-dbc6-4f3b-9abd-4598dfd5fd51)
+==================
+Foreign Key
+ - Is the column that is a PK 
+   for a related table.
+
+Industry Standards
+ - Avoid using FK as part of your DB Design.
+==================
+Constraint
+ - "Limitations" to do something.
+ - "Conditional Validation" done by the DB
+    before an operation.
+===================
+Data Modelling
+ - Table Names
+ - Columns in Each Table
+ - Data type of each columns
+ - Logical View (Relationship - ERR)
+ - Query Patterns
+====================
+QA Session ( try out check constraint )
+CREATE TABLE `test_db`.`salary` (
+  `id` INT NOT NULL,
+  `age` INT NULL check (age >18),
+  PRIMARY KEY (`id`));
+=======================
+Query : This is a way of asking something in DB.
+
+SQL - Structured Query Language
+ - Is the semantics of talking to a MySQL(RDBMS).
+
+CRUD Operations
+Create DataBase and Create Table
+CREATE DATABASE <DbName> -- Create the DB
+DROP DATABASE <DbName> -- DELETE the DB
+CREATE Table <TLName> -- Create the Table
+
+C - Create
+INSERT -> INSERT INTO <TlName> VALUES('','')
+R - Read
+SELECT -> SELECT <CNames>/* From <TlName>
+U - Update
+UPDATE -> 
+D - Delete
+DELETE -> 
+====================================
+Python Driver ----- mySQL
+Tuple               Record
+List of Tuple      List of Records
+=====================================
+JOIN -> 2 Tables.
+ - Merge Data from 2 Tables based on condition.
+ 
