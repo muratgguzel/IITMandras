@@ -1,0 +1,387 @@
+Connection successfully established!
+
+
+########################################################################################
+Populate all the collections in the database, from the JSON input file
+########################################################################################
+
+
+Product data insertion initiated
+Product data inserted in the collection
+Inventory data insertion initiated
+Inventory data inserted in the collection
+User data insertion initiated
+User data inserted in the collection
+Orders data insertion initiated
+Orders data inserted in the collection
+
+
+########################################################################################
+List all the collections in the database
+########################################################################################
+
+
+All Collection Names in product order db :  ['orders', 'inventory', 'users', 'products']
+
+
+########################################################################################
+Retrieve a single document from each collection
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a21'), 'sku': 'SNY-11001', 'code': 'Sony-01', 'price': 100000, 'created': '2021-08-09 12:32:56', 'last_updated': '2021-08-09 12:32:56', 'brand': 'Sony', 'model': 'Bravia-X', 'warranty': 5}
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a2b'), 'sku': 'SNY-11001', 'quantity': 100, 'last_updated': '2021-11-18 18:19:27'}
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a35'), 'name': 'Anjali Gupta', 'email': 'anjali.gupta@zestmail.com', 'created': '2020-12-08 13:01:56', 'last_accessed': '2021-12-04 13:23:00', 'role': 'Customer'}
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a41'), 'created': '2021-12-06 23:12:09', 'last_updated': '2021-12-07 20:30:01', 'items': [{'product_sku': 'SNY-11001', 'unit_price': 100000, 'quantity': 1}], 'total_price': 100000, 'discount': 10000, 'net_price': 90000, 'status': 1, 'user_email': 'sudha.nat@yourmail.com'}
+
+
+########################################################################################
+Retrieve the document with Product SKU SNY-11001 from Products collection
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a21'), 'sku': 'SNY-11001', 'code': 'Sony-01', 'price': 100000, 'created': '2021-08-09 12:32:56', 'last_updated': '2021-08-09 12:32:56', 'brand': 'Sony', 'model': 'Bravia-X', 'warranty': 5}
+
+
+########################################################################################
+Retrieve the document with Product SKU SNY-11001 from Products collection, with only specific fields
+########################################################################################
+
+
+Data fetched successfully.
+{'price': 100000, 'brand': 'Sony', 'model': 'Bravia-X'}
+
+
+########################################################################################
+Retrieve a NON-EXISTENT document with Product SKU SNY-11002 from Products collection
+########################################################################################
+
+
+Data fetched successfully.
+None
+
+
+########################################################################################
+Retrieve all documents with Brand name Samsung from Products collection
+########################################################################################
+
+
+Data fetched successfully.
+{'price': 66000, 'brand': 'Samsung', 'model': 'XZ'}
+{'price': 79000, 'brand': 'Samsung', 'model': 'G'}
+
+
+########################################################################################
+Retrieve all NON-EXISTENT documents with Brand name Huawei from Products collection
+########################################################################################
+
+
+Data fetched successfully.
+
+
+########################################################################################
+Retrieve the document with Product SKU LLG-32001 from Inventory collection
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a2e'), 'sku': 'LLG-32001', 'quantity': 450, 'last_updated': '2021-11-28 12:34:56'}
+
+
+########################################################################################
+Retrieve the document with Product SKU LLG-32001 from Inventory collection, with only specific fields
+########################################################################################
+
+
+Data fetched successfully.
+{'sku': 'LLG-32001', 'quantity': 450}
+
+
+########################################################################################
+Retrieve the NON-EXISTENT document with Product SKU LLG-32002 from Inventory collection
+########################################################################################
+
+
+Data fetched successfully.
+None
+
+
+########################################################################################
+Retrieve the document with email ID nisha.arora@evermail.com from Users collection
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a3e'), 'name': 'Nisha Arora', 'email': 'nisha.arora@evermail.com', 'created': '2020-02-28 12:00:00', 'last_accessed': '2021-12-01 14:23:34', 'role': 'Supplier'}
+
+
+########################################################################################
+Retrieve the document with email ID nisha.arora@evermail.com from Users collection, with only specific feilds
+########################################################################################
+
+
+Data fetched successfully.
+{'name': 'Nisha Arora', 'email': 'nisha.arora@evermail.com', 'role': 'Supplier'}
+
+
+########################################################################################
+Retrieve the NON-EXISTENT document with email ID xyz@mymail.com from Users collection
+########################################################################################
+
+
+Data fetched successfully.
+None
+
+
+########################################################################################
+Retrieve all the documents for orders placed by user with email ID sudha.nat@yourmail.com from Orders collection
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a41'), 'created': '2021-12-06 23:12:09', 'last_updated': '2021-12-07 20:30:01', 'items': [{'product_sku': 'SNY-11001', 'unit_price': 100000, 'quantity': 1}], 'total_price': 100000, 'discount': 10000, 'net_price': 90000, 'status': 1, 'user_email': 'sudha.nat@yourmail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a45'), 'created': '2021-12-07 22:56:23', 'last_updated': '2021-12-07 23:00:00', 'items': [{'product_sku': 'SMG-21001', 'unit_price': 66000, 'quantity': 1}], 'total_price': 66000, 'discount': 6600, 'net_price': 59400, 'status': 2, 'user_email': 'sudha.nat@yourmail.com'}
+
+
+########################################################################################
+Retrieve all the documents for orders placed by user with email ID sudha.nat@yourmail.com from Orders collection, with only specific fields
+########################################################################################
+
+
+Data fetched successfully.
+{'items': [{'product_sku': 'SNY-11001', 'unit_price': 100000, 'quantity': 1}], 'net_price': 90000, 'user_email': 'sudha.nat@yourmail.com'}
+{'items': [{'product_sku': 'SMG-21001', 'unit_price': 66000, 'quantity': 1}], 'net_price': 59400, 'user_email': 'sudha.nat@yourmail.com'}
+
+
+########################################################################################
+Retrieve all the NON-EXISTENT documents for orders placed by user with email ID albertz@yourmail.com from Orders collection
+########################################################################################
+
+
+Data fetched successfully.
+
+
+########################################################################################
+Find all product SKUs that have price not less than 100000
+########################################################################################
+
+
+Data fetched successfully.
+{'price': 100000, 'brand': 'Sony', 'model': 'Bravia-X'}
+{'price': 120000, 'brand': 'Sony', 'model': 'Bravia-Z'}
+{'price': 150000, 'brand': 'AppleTV', 'model': 'AP1'}
+{'price': 120000, 'brand': 'GoogleTV', 'model': 'GO1'}
+
+
+########################################################################################
+Find all orders that include a purchase of the product SKUs among SMG-21001 and SNY-11001
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a41'), 'items': [{'product_sku': 'SNY-11001'}], 'user_email': 'sudha.nat@yourmail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a42'), 'items': [{'product_sku': 'SMG-21001'}, {'product_sku': 'LLG-32001'}, {'product_sku': 'PNS-18001'}], 'user_email': 'currank@zestmail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a45'), 'items': [{'product_sku': 'SMG-21001'}], 'user_email': 'sudha.nat@yourmail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a46'), 'items': [{'product_sku': 'SNY-11001'}, {'product_sku': 'APL-01001'}], 'user_email': 'altertom@thismail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a48'), 'items': [{'product_sku': 'SMG-21001'}, {'product_sku': 'HER-13001'}], 'user_email': 'clara.king@evermail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a49'), 'items': [{'product_sku': 'SNY-11001'}], 'user_email': 'nisha.arora@evermail.com'}
+
+
+########################################################################################
+Find all orders that include the Product SKU SMG-21001 and that are also with status code 2
+########################################################################################
+
+
+Data fetched successfully.
+{'last_updated': '2021-12-07 23:00:00', 'status': 2, 'user_email': 'sudha.nat@yourmail.com'}
+
+
+########################################################################################
+Find the average cost of an order placed by any user
+########################################################################################
+
+
+Data fetched successfully!
+{'_id': 'avg_order_cost', 'avg_order_cost': 130050.0}
+
+
+########################################################################################
+Find the average cost of an order placed by users, categorized by user
+########################################################################################
+
+
+Data fetched successfully!
+{'_id': 'anjali.gupta@zestmail.com', 'avg_order_cost': 90000.0}
+{'_id': 'altertom@thismail.com', 'avg_order_cost': 225000.0}
+{'_id': 'nabil.jamal@thatmail.com', 'avg_order_cost': 165600.0}
+{'_id': 'sudha.nat@yourmail.com', 'avg_order_cost': 74700.0}
+{'_id': 'nisha.arora@evermail.com', 'avg_order_cost': 140400.0}
+{'_id': 'clara.king@evermail.com', 'avg_order_cost': 126900.0}
+{'_id': 'currank@zestmail.com', 'avg_order_cost': 172800.0}
+
+
+########################################################################################
+List the count of product SKUs available across Product brands, grouped by brand
+########################################################################################
+
+
+Data fetched successfully!
+{'_id': 'Panasonic', 'count': 1}
+{'_id': 'Sony', 'count': 2}
+{'_id': 'Haier', 'count': 1}
+{'_id': 'AppleTV', 'count': 1}
+{'_id': 'LG', 'count': 2}
+{'_id': 'Samsung', 'count': 2}
+{'_id': 'GoogleTV', 'count': 1}
+
+
+########################################################################################
+Return the 3 product items with the least quantity in the inventory
+########################################################################################
+
+
+Data fetched successfully!
+{'sku': 'APL-01001', 'quantity': 60}
+{'sku': 'SNY-12002', 'quantity': 80}
+{'sku': 'SNY-11001', 'quantity': 100}
+
+
+########################################################################################
+Return all the product items in the inventory that have less than 150 units each, sorted lowest first
+########################################################################################
+
+
+Data fetched successfully!
+{'sku': 'APL-01001', 'quantity': 60}
+{'sku': 'SNY-12002', 'quantity': 80}
+{'sku': 'SNY-11001', 'quantity': 100}
+{'sku': 'GGL-10001', 'quantity': 100}
+
+
+########################################################################################
+Find out the highest-priced item purchased by a particular user, among all the purchases he/she has made at the eCommerce site
+########################################################################################
+
+
+Data fetched successfully!
+{'items': {'product_sku': 'APL-01001', 'unit_price': 150000}, 'user_email': 'nisha.arora@evermail.com'}
+
+
+########################################################################################
+Find out the Product SKU that has been the highest selling item by count
+########################################################################################
+
+
+Data fetched successfully!
+{'_id': 'SMG-21001', 'count': 3}
+
+
+########################################################################################
+Find all product SKUs that have price not less than 100000
+########################################################################################
+
+
+WITHOUT INDEXING
+########################################################################################
+Data fetched successfully.
+{'executionSuccess': True, 'nReturned': 4, 'executionTimeMillis': 0, 'totalKeysExamined': 0, 'totalDocsExamined': 10, 'executionStages': {'stage': 'COLLSCAN', 'filter': {'price': {'$gte': 100000}}, 'nReturned': 4, 'executionTimeMillisEstimate': 0, 'works': 12, 'advanced': 4, 'needTime': 7, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'direction': 'forward', 'docsExamined': 10}, 'allPlansExecution': []}
+########################################################################################
+WITH INDEXING
+########################################################################################
+Data fetched successfully.
+{'executionSuccess': True, 'nReturned': 4, 'executionTimeMillis': 0, 'totalKeysExamined': 4, 'totalDocsExamined': 4, 'executionStages': {'stage': 'FETCH', 'nReturned': 4, 'executionTimeMillisEstimate': 1, 'works': 5, 'advanced': 4, 'needTime': 0, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'docsExamined': 4, 'alreadyHasObj': 0, 'inputStage': {'stage': 'IXSCAN', 'nReturned': 4, 'executionTimeMillisEstimate': 1, 'works': 5, 'advanced': 4, 'needTime': 0, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'keyPattern': {'price': 1}, 'indexName': 'price_index', 'isMultiKey': False, 'multiKeyPaths': {'price': []}, 'isUnique': False, 'isSparse': False, 'isPartial': False, 'indexVersion': 2, 'direction': 'forward', 'indexBounds': {'price': ['[100000, inf.0]']}, 'keysExamined': 4, 'seeks': 1, 'dupsTested': 0, 'dupsDropped': 0}}, 'allPlansExecution': []}
+
+
+########################################################################################
+Find all orders that include a purchase of the product SKUs among SMG-21001 and SNY-11001
+########################################################################################
+
+
+WITHOUT INDEXING
+########################################################################################
+Data fetched successfully.
+{'executionSuccess': True, 'nReturned': 6, 'executionTimeMillis': 0, 'totalKeysExamined': 0, 'totalDocsExamined': 10, 'executionStages': {'stage': 'PROJECTION_DEFAULT', 'nReturned': 6, 'executionTimeMillisEstimate': 0, 'works': 12, 'advanced': 6, 'needTime': 5, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'transformBy': {'user_email': 1, 'items.product_sku': 1}, 'inputStage': {'stage': 'COLLSCAN', 'filter': {'items.product_sku': {'$in': ['SMG-21001', 'SNY-11001']}}, 'nReturned': 6, 'executionTimeMillisEstimate': 0, 'works': 12, 'advanced': 6, 'needTime': 5, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'direction': 'forward', 'docsExamined': 10}}, 'allPlansExecution': []}
+########################################################################################
+WITH INDEXING
+########################################################################################
+Data fetched successfully.
+{'executionSuccess': True, 'nReturned': 6, 'executionTimeMillis': 0, 'totalKeysExamined': 7, 'totalDocsExamined': 6, 'executionStages': {'stage': 'PROJECTION_DEFAULT', 'nReturned': 6, 'executionTimeMillisEstimate': 0, 'works': 7, 'advanced': 6, 'needTime': 0, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'transformBy': {'user_email': 1, 'items.product_sku': 1}, 'inputStage': {'stage': 'FETCH', 'nReturned': 6, 'executionTimeMillisEstimate': 0, 'works': 7, 'advanced': 6, 'needTime': 0, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'docsExamined': 6, 'alreadyHasObj': 0, 'inputStage': {'stage': 'IXSCAN', 'nReturned': 6, 'executionTimeMillisEstimate': 0, 'works': 7, 'advanced': 6, 'needTime': 0, 'needYield': 0, 'saveState': 0, 'restoreState': 0, 'isEOF': 1, 'keyPattern': {'items.product_sku': 1}, 'indexName': 'sku_index', 'isMultiKey': True, 'multiKeyPaths': {'items.product_sku': ['items']}, 'isUnique': False, 'isSparse': False, 'isPartial': False, 'indexVersion': 2, 'direction': 'forward', 'indexBounds': {'items.product_sku': ['["SMG-21001", "SMG-21001"]', '["SNY-11001", "SNY-11001"]']}, 'keysExamined': 7, 'seeks': 1, 'dupsTested': 6, 'dupsDropped': 0}}}, 'allPlansExecution': []}
+
+
+########################################################################################
+Find out the highest-priced item purchased by a particular user, among all the purchases he/she has made at the eCommerce site
+########################################################################################
+
+
+WITHOUT INDEXING
+########################################################################################
+{'explainVersion': '1', 'stages': [{'$cursor': {'queryPlanner': {'namespace': 'product_orders_db.orders', 'indexFilterSet': False, 'parsedQuery': {'user_email': {'$eq': 'nisha.arora@evermail.com'}}, 'queryHash': '195A4E14', 'planCacheKey': 'A2FDFB14', 'maxIndexedOrSolutionsReached': False, 'maxIndexedAndSolutionsReached': False, 'maxScansToExplodeReached': False, 'winningPlan': {'stage': 'PROJECTION_SIMPLE', 'transformBy': {'items': 1, 'user_email': 1, '_id': 0}, 'inputStage': {'stage': 'COLLSCAN', 'filter': {'user_email': {'$eq': 'nisha.arora@evermail.com'}}, 'direction': 'forward'}}, 'rejectedPlans': []}}}, {'$unwind': {'path': '$items'}}, {'$project': {'user_email': True, 'items': {'product_sku': True, 'unit_price': True}, '_id': False}}, {'$sort': {'sortKey': {'items.unit_price': -1}, 'limit': 1}}], 'serverInfo': {'host': 'ajay-ThinkPad-T550', 'port': 27017, 'version': '5.0.6', 'gitVersion': '212a8dbb47f07427dae194a9c75baec1d81d9259'}, 'serverParameters': {'internalQueryFacetBufferSizeBytes': 104857600, 'internalQueryFacetMaxOutputDocSizeBytes': 104857600, 'internalLookupStageIntermediateDocumentMaxSizeBytes': 104857600, 'internalDocumentSourceGroupMaxMemoryBytes': 104857600, 'internalQueryMaxBlockingSortMemoryUsageBytes': 104857600, 'internalQueryProhibitBlockingMergeOnMongoS': 0, 'internalQueryMaxAddToSetBytes': 104857600, 'internalDocumentSourceSetWindowFieldsMaxMemoryBytes': 104857600}, 'command': {'aggregate': 'orders', 'pipeline': [{'$match': {'user_email': {'$eq': 'nisha.arora@evermail.com'}}}, {'$unwind': '$items'}, {'$project': {'_id': 0, 'user_email': 1, 'items.product_sku': 1, 'items.unit_price': 1}}, {'$sort': {'items.unit_price': -1}}, {'$limit': 1}], 'explain': True, 'lsid': {'id': Binary(b'Wt\xd2r$MNb\x8e\x8d\xe8,7\x8f\xa5\x84', 4)}, '$db': 'product_orders_db', '$readPreference': {'mode': 'primaryPreferred'}}, 'ok': 1.0}
+########################################################################################
+WITH INDEXING
+########################################################################################
+{'explainVersion': '1', 'stages': [{'$cursor': {'queryPlanner': {'namespace': 'product_orders_db.orders', 'indexFilterSet': False, 'parsedQuery': {'user_email': {'$eq': 'nisha.arora@evermail.com'}}, 'queryHash': '195A4E14', 'planCacheKey': 'BB294DFE', 'maxIndexedOrSolutionsReached': False, 'maxIndexedAndSolutionsReached': False, 'maxScansToExplodeReached': False, 'winningPlan': {'stage': 'PROJECTION_SIMPLE', 'transformBy': {'items': 1, 'user_email': 1, '_id': 0}, 'inputStage': {'stage': 'FETCH', 'inputStage': {'stage': 'IXSCAN', 'keyPattern': {'user_email': 1}, 'indexName': 'email_index', 'isMultiKey': False, 'multiKeyPaths': {'user_email': []}, 'isUnique': False, 'isSparse': False, 'isPartial': False, 'indexVersion': 2, 'direction': 'forward', 'indexBounds': {'user_email': ['["nisha.arora@evermail.com", "nisha.arora@evermail.com"]']}}}}, 'rejectedPlans': []}}}, {'$unwind': {'path': '$items'}}, {'$project': {'user_email': True, 'items': {'product_sku': True, 'unit_price': True}, '_id': False}}, {'$sort': {'sortKey': {'items.unit_price': -1}, 'limit': 1}}], 'serverInfo': {'host': 'ajay-ThinkPad-T550', 'port': 27017, 'version': '5.0.6', 'gitVersion': '212a8dbb47f07427dae194a9c75baec1d81d9259'}, 'serverParameters': {'internalQueryFacetBufferSizeBytes': 104857600, 'internalQueryFacetMaxOutputDocSizeBytes': 104857600, 'internalLookupStageIntermediateDocumentMaxSizeBytes': 104857600, 'internalDocumentSourceGroupMaxMemoryBytes': 104857600, 'internalQueryMaxBlockingSortMemoryUsageBytes': 104857600, 'internalQueryProhibitBlockingMergeOnMongoS': 0, 'internalQueryMaxAddToSetBytes': 104857600, 'internalDocumentSourceSetWindowFieldsMaxMemoryBytes': 104857600}, 'command': {'aggregate': 'orders', 'pipeline': [{'$match': {'user_email': {'$eq': 'nisha.arora@evermail.com'}}}, {'$unwind': '$items'}, {'$project': {'_id': 0, 'user_email': 1, 'items.product_sku': 1, 'items.unit_price': 1}}, {'$sort': {'items.unit_price': -1}}, {'$limit': 1}], 'explain': True, 'lsid': {'id': Binary(b'Wt\xd2r$MNb\x8e\x8d\xe8,7\x8f\xa5\x84', 4)}, '$db': 'product_orders_db', '$readPreference': {'mode': 'primaryPreferred'}}, 'ok': 1.0}
+
+
+########################################################################################
+Update the email address of the user, who originally had the email ID nisha.arora@evermail.com, to arora.nisha@origmail.net
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a3e'), 'name': 'Nisha Arora', 'email': 'nisha.arora@evermail.com', 'created': '2020-02-28 12:00:00', 'last_accessed': '2021-12-01 14:23:34', 'role': 'Supplier'}
+########################################################################################
+AFTER UPDATE
+########################################################################################
+Document(s) updated successfully
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a3e'), 'name': 'Nisha Arora', 'email': 'arora.nisha@origmail.net', 'created': '2020-02-28 12:00:00', 'last_accessed': '2021-12-01 14:23:34', 'role': 'Supplier'}
+
+
+########################################################################################
+Increment the quantity of the Product SKU APL-01001 in the inventory, by 20
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a33'), 'sku': 'APL-01001', 'quantity': 60, 'last_updated': '2021-10-12 16:34:23'}
+########################################################################################
+AFTER UPDATE
+########################################################################################
+Document(s) updated successfully
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a33'), 'sku': 'APL-01001', 'quantity': 80, 'last_updated': '2021-10-12 16:34:23'}
+
+
+########################################################################################
+Remove the warranty information from the Product with SKU PNS-18001
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a25'), 'sku': 'PNS-18001', 'code': 'Panasonic-01', 'price': 62000, 'created': '2021-11-01 19:21:00', 'last_updated': '2021-11-01 19:21:00', 'brand': 'Panasonic', 'model': 'LY', 'warranty': 3}
+########################################################################################
+AFTER UPDATE
+########################################################################################
+Document(s) updated successfully
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a25'), 'sku': 'PNS-18001', 'code': 'Panasonic-01', 'price': 62000, 'created': '2021-11-01 19:21:00', 'last_updated': '2021-11-01 19:21:00', 'brand': 'Panasonic', 'model': 'LY'}
+
+
+########################################################################################
+Delete entries from the Orders collection, originally placed by the user with email ID anjali.gupta@zestmail.com
+########################################################################################
+
+
+Data fetched successfully.
+{'_id': ObjectId('624f1f6621bc721157214a44'), 'created': '2021-12-08 02:18:46', 'last_updated': '2021-12-08 02:20:24', 'items': [{'product_sku': 'SNY-12002', 'unit_price': 120000, 'quantity': 1}], 'total_price': 120000, 'discount': 12000, 'net_price': 108000, 'status': 2, 'user_email': 'anjali.gupta@zestmail.com'}
+{'_id': ObjectId('624f1f6621bc721157214a4a'), 'created': '2021-12-06 23:47:18', 'last_updated': '2021-12-07 12:33:24', 'items': [{'product_sku': 'LLG-33002', 'unit_price': 80000, 'quantity': 1}], 'total_price': 80000, 'discount': 8000, 'net_price': 72000, 'status': 1, 'user_email': 'anjali.gupta@zestmail.com'}
+########################################################################################
+AFTER DELETE
+########################################################################################
+Document(s) deleted successfully
+Data fetched successfully.

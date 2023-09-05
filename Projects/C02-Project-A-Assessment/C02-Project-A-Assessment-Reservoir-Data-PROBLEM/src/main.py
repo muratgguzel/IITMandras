@@ -10,7 +10,6 @@ daily_report_service = DailyReportService()
 #######################################################################################
 
 # print(Accessing device DS004')
-
 device_doc = device_service.find_by_device_id('DS004')
 if (device_doc == -1):
     print(device_service.latest_error, end='\n\n')
@@ -19,7 +18,6 @@ else:
 
 
 # print('Creating device DC201')
-
 device_doc = device_service.insert('DC201', 'Calcium Sensor', 'Calcium', 'Acme')
 if (device_doc == -1):
     print(device_service.latest_error, end='\n\n')

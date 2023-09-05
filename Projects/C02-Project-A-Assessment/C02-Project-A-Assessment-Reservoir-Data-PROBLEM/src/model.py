@@ -19,7 +19,18 @@ class DeviceModel:
         self._latest_error = latest_error
 
     def find_by_device_id(self, device_id):
-    
+        self.latest_error = ''
+
+        key = {"device_id": device_id}
+        document = self._db.get_single_data(DeviceModel.DEVICE_COLLECTION,key)
+
+        if (document):
+            return document
+        else:
+            self.latest_error = f'Device id {device_id} not found!'
+            return -1
+
+
     #####################################################################################
     #                                                                                   #
     # Insert the missing code here!                                                     #
@@ -39,6 +50,14 @@ class DeviceModel:
 
     def __find(self, key):
 
+        document = self._db.get_single_data(DeviceModel.DEVICE_COLLECTION, key)
+
+        if (document):
+            return document
+        else:
+            self.latest_error = f'Device id with Key: {key} not found!'
+            return -1
+
     #####################################################################################
     #                                                                                   #
     # Insert the missing code here!                                                     #
@@ -55,7 +74,7 @@ class DeviceModel:
         self.latest_error = ''
         document = self.find_by_device_id(device_id)
 
-        if (document):
+        if (document!=-1):
             self.latest_error = f'Device id {device_id} already exists!'
             return -1
 
@@ -67,6 +86,7 @@ class DeviceModel:
         }
 
         object_id = self._db.insert_single_data(DeviceModel.DEVICE_COLLECTION, device_data)
+        print(f"Object_Id:{object_id} Device Data:{device_data} document Inserted Successfully,")
         return self.find_by_object_id(object_id)
 
 
