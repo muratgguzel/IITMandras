@@ -20,6 +20,8 @@ class DeviceModel:
     def find_by_device_id(self, device_id):
         self.latest_error = ''
 
+        # 1.A KEY TO RETRIEVE A SINGLE DEVICE BY SPECIFYING DEVICE ID
+
         key = {"device_id": device_id}
         document=self.__find(key)
         if (document):
@@ -80,6 +82,7 @@ class ReservoirDataModel:
     
     def find_by_device_id_and_timestamp(self, device_id, timestamp):
 
+        #1.B QUERY TAKES A DEVICE ID AND TIMESTEPM TO RETRIEV DESIRED DOCUMENT
         key = {"device_id": device_id,"timestamp":timestamp}
         document = self.__find(key)
         if (document):
@@ -140,6 +143,7 @@ class DailyReportModel:
     
     def find_by_device_id_and_date(self, device_id, date):
 
+        #2.A TAKES A DEVICE ID AND PARTICULAR DATE RETURNS DOCUMENT
         key = {"device_id": device_id, "date": date}
         document_list = self.__find(key)
 
@@ -151,6 +155,7 @@ class DailyReportModel:
 
     def find_by_device_id_and_date_range(self, device_id, from_date, to_date):
 
+        # 2.B TAKES A DEVICE ID AND DATE RANGE RETURNS DOCUMENT LIST
         key = {"device_id": device_id, "date": {"$gte": from_date,"$lte": to_date}}
         documentlist = self.__find(key)
 
@@ -162,10 +167,12 @@ class DailyReportModel:
 
     def find_first_anomaly_by_date_range(self, device_ids, threshold, from_date, to_date):
 
+        # 3.A-B TAKES A DEVICE IDS , Threshold and Query dates , return first anomaly greated than threshold
         key = {"date": {"$gte": from_date, "$lte": to_date}, "device_id": {"$in": device_ids}, "max_value": {"$gt": threshold}}
 
         documentlist = self.__find(key)
 
+        #Get first
         if (documentlist[0]):
             return documentlist[0]
         else:

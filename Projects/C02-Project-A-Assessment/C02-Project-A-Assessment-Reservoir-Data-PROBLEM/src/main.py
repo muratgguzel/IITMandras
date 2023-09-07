@@ -14,6 +14,7 @@ device_doc = device_service.find_by_device_id('DS004')
 if (device_doc == -1):
     print(device_service.latest_error, end='\n\n')
 else:
+    print("1.A", end='\n\n')
     print(device_doc, end='\n\n')
 
 
@@ -30,6 +31,7 @@ reservoir_data_doc = reservoir_data_service.find_by_device_id_and_timestamp('DS0
 if (reservoir_data_doc == -1):
     print(reservoir_data_service.latest_error, end='\n\n')
 else:
+    print("1.B", end='\n\n')
     print(reservoir_data_doc, end='\n\n')
 
 ###############################################################################################
@@ -41,10 +43,12 @@ daily_report_service.create_reports()
 
 print('Get daily report for one day')
 daily_report = daily_report_service.find_by_device_id_and_date('DS004',datetime.datetime(2021, 12, 2))
+print("2.A", end='\n\n')
 print(daily_report, end='\n\n')
 
 print('Get daily report for multiple days')
 daily_reports = daily_report_service.find_by_device_id_and_date_range('DC004',datetime.datetime(2021, 12, 2),datetime.datetime(2021, 12, 4))
+print("2.B", end='\n\n')
 print(daily_reports, end='\n\n')
 
 ############################## NEWLY ADDED!##########################################
@@ -59,10 +63,12 @@ first_salinity_anomaly = daily_report_service.find_first_anomaly_by_date_range(s
                                                                                 1050,
                                                                                 datetime.datetime(2021, 12, 2),
                                                                                 datetime.datetime(2021, 12, 5))
+print("3.A", end='\n\n')
 print(first_salinity_anomaly, end='\n\n')
 
 first_calcium_anomaly = daily_report_service.find_first_anomaly_by_date_range(calcium_sensors,
                                                                                 80,
                                                                                 datetime.datetime(2021, 12, 2),
                                                                                 datetime.datetime(2021, 12, 5))
+print("3.B", end='\n\n')
 print(first_calcium_anomaly, end='\n\n')
