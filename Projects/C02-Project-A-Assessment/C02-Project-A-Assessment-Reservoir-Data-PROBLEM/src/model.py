@@ -2,7 +2,6 @@ from sys import settrace
 from database import Database
 from bson.objectid import ObjectId
 
-
 class DeviceModel:
     DEVICE_COLLECTION = 'devices'
 
@@ -22,27 +21,12 @@ class DeviceModel:
         self.latest_error = ''
 
         key = {"device_id": device_id}
-        document = self._db.get_single_data(DeviceModel.DEVICE_COLLECTION,key)
-
+        document=self.__find(key)
         if (document):
             return document
         else:
             self.latest_error = f'Device id {device_id} not found!'
             return -1
-
-
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # 1. Construct the key for the query                                                #
-    # 2. Invoke the __find() function to run the query                                  #
-    #                                                                                   #
-    #####################################################################################
-
-        # After implementing the function body, comment out the line below
-        pass
-
 
     def find_by_object_id(self, object_id):
         key = {'_id': ObjectId(object_id)}
@@ -58,17 +42,6 @@ class DeviceModel:
             self.latest_error = f'Device id with Key: {key} not found!'
             return -1
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # Implement the body of the __find() function                                       #
-    # Access the MongoDB collection                                                     #
-    #                                                                                   #
-    #####################################################################################
-        
-        # After implementing the function body, comment out the line below
-        pass
 
     def insert(self, device_id, desc, type, manufacturer):
         self.latest_error = ''
@@ -107,17 +80,14 @@ class ReservoirDataModel:
     
     def find_by_device_id_and_timestamp(self, device_id, timestamp):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # 1. Construct the key for the query                                                #
-    # 2. Invoke the __find() function to run the query                                  #
-    #                                                                                   #
-    #####################################################################################
+        key = {"device_id": device_id,"timestamp":timestamp}
+        document = self.__find(key)
+        if (document):
+            return document
+        else:
+            self.latest_error = f'Device id with Key: {key} not found!'
+            return -1
 
-        # After implementing the function body, comment out the line below
-        pass
 
     def find_by_object_id(self, obj_id):
         key = {'_id': ObjectId(obj_id)}
@@ -133,18 +103,9 @@ class ReservoirDataModel:
     
     def __find(self, key):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # Implement the body of the __find() function                                       #
-    # Access the MongoDB collection                                                     #
-    #                                                                                   #
-    #####################################################################################
+        documents = self._db.get_single_data(ReservoirDataModel.RESERVOIR_DATA_COLLECTION, key)
+        return documents
 
-        # After implementing the function body, comment out the line below
-        pass
-    
     def __find_multiple(self, key):
         documents = self._db.get_multiple_data(ReservoirDataModel.RESERVOIR_DATA_COLLECTION, key)
         return documents
@@ -179,45 +140,37 @@ class DailyReportModel:
     
     def find_by_device_id_and_date(self, device_id, date):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # 1. Construct the key for the query                                                #
-    # 2. Invoke the __find() function to run the query                                  #
-    #                                                                                   #
-    #####################################################################################
+        key = {"device_id": device_id, "date": date}
+        document_list = self.__find(key)
 
-        # After implementing the function body, comment out the line below
-        pass
-    
+        if (document_list[0]):
+            return document_list[0]
+        else:
+            self.latest_error = f'Device id with Key: {key} not found!'
+            return -1
+
     def find_by_device_id_and_date_range(self, device_id, from_date, to_date):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # 1. Construct the key for the query                                                #
-    # 2. Invoke the __find() function to run the query                                  #
-    #                                                                                   #
-    #####################################################################################
+        key = {"device_id": device_id, "date": {"$gte": from_date,"$lte": to_date}}
+        documentlist = self.__find(key)
 
-        # After implementing the function body, comment out the line below
-        pass
+        if (documentlist[0]):
+            return documentlist
+        else:
+            self.latest_error = f'Record with Key: {key} not found!'
+            return -1
 
     def find_first_anomaly_by_date_range(self, device_ids, threshold, from_date, to_date):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # 1. Construct the key for the query                                                #
-    # 2. Invoke the __find() function to run the query                                  #
-    #                                                                                   #
-    #####################################################################################
-    
-        # After implementing the function body, comment out the line below
-        pass
+        key = {"date": {"$gte": from_date, "$lte": to_date}, "device_id": {"$in": device_ids}, "max_value": {"$gt": threshold}}
+
+        documentlist = self.__find(key)
+
+        if (documentlist[0]):
+            return documentlist[0]
+        else:
+            self.latest_error = f'Record with Key: {key} not found!'
+            return -1
 
     def find_by_object_id(self, obj_id):
         key = {'_id': ObjectId(obj_id)}
@@ -225,18 +178,14 @@ class DailyReportModel:
     
     def __find(self, key):
 
-    #####################################################################################
-    #                                                                                   #
-    # Insert the missing code here!                                                     #
-    #                                                                                   #
-    # Implement the body of the __find() function                                       #
-    # Access the MongoDB collection                                                     #
-    #                                                                                   #
-    #####################################################################################
-    
-        # After implementing the function body, comment out the line below
-        pass
-        
+        documents_list=[]
+        cursor = self._db.get_multiple_data(DailyReportModel.DAILY_REPORT_COLLECTION, key)
+        for document in cursor:
+            documents_list.append(document)
+
+        return documents_list
+
+
     def __find_multiple(self, key):
         daily_report_documents = self._db.get_multiple_data(DailyReportModel.DAILY_REPORT_COLLECTION, key)
         return daily_report_documents

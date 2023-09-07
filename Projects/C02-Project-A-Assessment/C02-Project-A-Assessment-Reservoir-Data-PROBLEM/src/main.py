@@ -26,9 +26,7 @@ else:
 
 
 # print('Read DS001 device data')
-
-reservoir_data_doc = reservoir_data_service.find_by_device_id_and_timestamp('DS001', 
-                                                                            datetime.datetime(2021, 12, 2, 13, 30, 0))
+reservoir_data_doc = reservoir_data_service.find_by_device_id_and_timestamp('DS001',datetime.datetime(2021, 12, 2, 13, 30, 0))
 if (reservoir_data_doc == -1):
     print(reservoir_data_service.latest_error, end='\n\n')
 else:
@@ -42,14 +40,11 @@ print('Generate daily reports')
 daily_report_service.create_reports()
 
 print('Get daily report for one day')
-daily_report = daily_report_service.find_by_device_id_and_date('DS004', 
-                                                                datetime.datetime(2021, 12, 2))
+daily_report = daily_report_service.find_by_device_id_and_date('DS004',datetime.datetime(2021, 12, 2))
 print(daily_report, end='\n\n')
 
 print('Get daily report for multiple days')
-daily_reports = daily_report_service.find_by_device_id_and_date_range('DC004', 
-                                                                        datetime.datetime(2021, 12, 2), 
-                                                                        datetime.datetime(2021, 12, 4))
+daily_reports = daily_report_service.find_by_device_id_and_date_range('DC004',datetime.datetime(2021, 12, 2),datetime.datetime(2021, 12, 4))
 print(daily_reports, end='\n\n')
 
 ############################## NEWLY ADDED!##########################################
