@@ -72,45 +72,46 @@ class Edge_Server:
 
     # Returning the current registered list
     def get_registered_device_list(self):
-        while len(self._registered_list)<8 :
+        while len(self._registered_list)<2 :
             time.sleep(1)
         return self._registered_list
 
     # Getting the status for the connected devices
-    def get_status(self,CallType,Device_Id="DEFAULT",FilterDevice="DEFAULT",FilterRoom="DEFAULT"):
+    def get_status(self,CallType,FilterDevice="DEFAULT"):
         message = {}
         message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
         message["Edge_Command"] = "GET_STATUS"
 
         # BASED ON DEVICE ID
         if CallType=="DEVICE_ID":
-                    message["device_id"] = Device_Id
-                    message["FilterBy"]="DEVICE_ID"
-                    message["FilterDevice"] = "NOT_EXITS"
-                    message["FilterRoom"] = FilterRoom
-                    time.sleep(3)
-                    self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
+            for device_id in self._registered_list:
+                message["device_id"] = device_id
+                message["FilterBy"]="DEVICE_ID"
+                message["FilterDevice"] = "NOT_EXITS"
+                message["FilterRoom"] = "NOT_EXITS"
+                time.sleep(2)
+                self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
         elif CallType=="DEVICE_TYPE":
             # BASED ON DEVICE_Type
-                message["device_id"] = "NOT_EXITS"
+            for device_id in self._registered_list:
+                message["device_id"] = device_id
                 message["FilterBy"]="DEVICE_TYPE"
                 message["FilterDevice"]=FilterDevice
-                message["FilterRoom"] = FilterRoom
-                time.sleep(3)
+                message["FilterRoom"] = "NOT_EXITS"
+                time.sleep(2)
                 self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
         elif CallType=="ROOM":
-                message["device_id"] = "NOT_EXITS"
+            for device_id in self._registered_list:
+                message["device_id"] = device_id
                 message["FilterDevice"] = "NOT_EXITS"
                 message["FilterBy"]="ROOM"
-                message["FilterRoom"] = FilterRoom
-                time.sleep(3)
+                time.sleep(2)
                 self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
-        elif CallType=="HOME":
-                message["device_id"] = "NOT_EXITS"
-                message["FilterDevice"] = "NOT_EXITS"
-                message["FilterBy"]="HOME"
-                message["FilterRoom"] = "NOT_EXITS"
-                time.sleep(3)
+        elif CallType=="ALL":
+            for device_id in self._registered_list:
+                message["device_id"] = device_id
+                message["FilterBy"]="ALL"
+                time.sleep(2)
                 self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
 
 

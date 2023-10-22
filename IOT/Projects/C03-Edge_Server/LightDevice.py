@@ -78,7 +78,7 @@ class Light_Device():
             device_type = self._device_type
             device_room = self._room_type
             Edge_Command = data["Edge_Command"]
-            print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+            print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command}\n")
 
             #Prepare OUTGOING MESSAGE DATA
             message = {}
@@ -86,14 +86,14 @@ class Light_Device():
             message["device_id"] = self._device_id
             message["device_type"] = self._device_type
             message["device_room"] = self._room_type
-            message["device_status"] = self._switch_status
+            message["LIGHT_status"] = self._switch_status
             message["device_intensity"] = self._light_intensity
             message["device_request"] = "GET_STATUS_REPLY"
             Edge_Command = data["Edge_Command"]
-            print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
             print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} REPLY\n")
             time.sleep(1)
-            self.client.publish("devices", json.dumps(message))
+            self.client.publish("devices/#", json.dumps(message))
 
         elif (Edge_command == "GET_STATUS") and Call_Reason == "DEVICE_TYPE"  and (device_type == self._device_type):
             # INCOMING MESSAGE DATA
@@ -101,7 +101,7 @@ class Light_Device():
             device_type = self._device_type
             device_room = self._room_type
             Edge_Command = data["Edge_Command"]
-            #print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+            print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command}\n")
 
             # Prepare OUTGOING MESSAGE DATA
             message = {}
@@ -109,14 +109,14 @@ class Light_Device():
             message["device_id"] = self._device_id
             message["device_type"] = self._device_type
             message["device_room"] = self._room_type
-            message["device_status"] = self._switch_status
+            message["LIGHT_status"] = self._switch_status
             message["device_intensity"] = self._light_intensity
             message["device_request"] = "GET_STATUS_REPLY"
             Edge_Command = data["Edge_Command"]
-            #print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
-            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+            print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
+            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} REPLY\n")
             time.sleep(1)
-            self.client.publish("devices", json.dumps(message))
+            self.client.publish("devices/#", json.dumps(message))
 
         elif (Edge_command == "GET_STATUS") and Call_Reason == "ROOM" and (device_room == self._room_type):
             # INCOMING MESSAGE DATA
@@ -124,7 +124,7 @@ class Light_Device():
             device_type = self._device_type
             device_room = self._room_type
             Edge_Command = data["Edge_Command"]
-            #print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+            print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command}\n")
 
             # Prepare OUTGOING MESSAGE DATA
             message = {}
@@ -132,39 +132,18 @@ class Light_Device():
             message["device_id"] = self._device_id
             message["device_type"] = self._device_type
             message["device_room"] = self._room_type
-            message["device_status"] = self._switch_status
+            message["LIGHT_status"] = self._switch_status
             message["device_intensity"] = self._light_intensity
             message["device_request"] = "GET_STATUS_REPLY"
             Edge_Command = data["Edge_Command"]
-            #print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
             print(
-                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
-            time.sleep(1)
-            self.client.publish("devices", json.dumps(message))
-
-        elif (Edge_command == "GET_STATUS") and Call_Reason == "HOME":
-            # INCOMING MESSAGE DATA
-            device_reg_id = self._device_id
-            device_type = self._device_type
-            device_room = self._room_type
-            Edge_Command = data["Edge_Command"]
-            #print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
-
-            # Prepare OUTGOING MESSAGE DATA
-            message = {}
-            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-            message["device_id"] = self._device_id
-            message["device_type"] = self._device_type
-            message["device_room"] = self._room_type
-            message["device_status"] = self._switch_status
-            message["device_intensity"] = self._light_intensity
-            message["device_request"] = "GET_STATUS_REPLY"
-            Edge_Command = data["Edge_Command"]
-            #print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+                f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
             print(
-                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} REPLY\n")
             time.sleep(1)
-            self.client.publish("devices", json.dumps(message))
+            self.client.publish("devices/#", json.dumps(message))
+
+
 
 
 
