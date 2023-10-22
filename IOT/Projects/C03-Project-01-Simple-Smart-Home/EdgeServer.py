@@ -117,5 +117,42 @@ class Edge_Server:
 
     # Controlling and performing the operations on the devices
     # based on the request received
-    def set(self):
-        pass
+    def set_status(self,CallType,Device_Id="DEFAULT",FilterDevice="DEFAULT",FilterRoom="DEFAULT",SWITCH_STATE="DEFAULT",TEMP_STATE="DEFAULT",INTENSITY_STATE="DEFAULT"):
+        message = {}
+        message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+        message["Edge_Command"] = "SET_STATUS"
+
+        # BASED ON DEVICE ID
+        if CallType == "DEVICE_ID":
+            message["device_id"] = Device_Id
+            message["FilterBy"] = "DEVICE_ID"
+            message["FilterDevice"] = "NOT_EXITS"
+            message["FilterRoom"] = FilterRoom
+            message["SetSwitch"]=SWITCH_STATE
+            message["SetTemp"] =TEMP_STATE
+            message["SetIntensity"]=INTENSITY_STATE
+
+            time.sleep(3)
+            self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
+        elif CallType == "DEVICE_TYPE":
+            # BASED ON DEVICE_Type
+            message["device_id"] = "NOT_EXITS"
+            message["FilterBy"] = "DEVICE_TYPE"
+            message["FilterDevice"] = FilterDevice
+            message["FilterRoom"] = FilterRoom
+            message["SetSwitch"] = SWITCH_STATE
+            message["SetTemp"] = TEMP_STATE
+            message["SetIntensity"] = INTENSITY_STATE
+
+            time.sleep(3)
+            self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)
+        elif CallType == "ROOM":
+            message["device_id"] = "NOT_EXITS"
+            message["FilterDevice"] = "NOT_EXITS"
+            message["FilterBy"] = "ROOM"
+            message["FilterRoom"] = FilterRoom
+            message["SetSwitch"] = SWITCH_STATE
+            message["SetTemp"] = TEMP_STATE
+            message["SetIntensity"] = INTENSITY_STATE
+            time.sleep(3)
+            self.client.publish("EDGE_COMMAND", json.dumps(message), qos=0)

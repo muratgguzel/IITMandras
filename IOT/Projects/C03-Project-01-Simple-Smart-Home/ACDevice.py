@@ -93,7 +93,7 @@ class AC_Device():
             message["device_request"] = "GET_STATUS_REPLY"
             Edge_Command = data["Edge_Command"]
             print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
-            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._temperature} CMD:{Edge_command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Temprature:{self._temperature} CMD:{Edge_command} CALL_REASON:{Call_Reason} REPLY\n")
             time.sleep(1)
             self.client.publish("devices", json.dumps(message))
 
@@ -170,21 +170,124 @@ class AC_Device():
             time.sleep(1)
             self.client.publish("devices", json.dumps(message))
 
+            ###########################################################################SETTING THE DEVICE STATUS#########################################################################################################
+
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "DEVICE_ID" and (device_id == self._device_id):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+            print(
+                f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason} \n")
+
+            #SwitchStatus=self._get_switch_status()
+            #Temprature=self._get_temperature()
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+            if(data["SetTemp"]!="NOT_EXITS"):
+                set_device_temp =   data["SetTemp"]
+                self._set_temperature(set_device_temp)
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = "NOT_EXITS"
+            message["device_room_temp"] = self._get_temperature()
+
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            print(
+                f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
+            print(
+                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Temprature:{self._temperature} CMD:{Edge_command} CALL_REASON:{Call_Reason} REPLY\n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "DEVICE_TYPE" and (device_type == self._device_type):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+
+            if (data["SetTemp"] != "NOT_EXITS"):
+                set_device_temp = data["SetTemp"]
+                self._set_temperature(set_device_temp)
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+            # print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = self._get_temperature()
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            # print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Temprature:{self._get_temperature()} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "ROOM" and (device_room == self._room_type):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+
+            if (data["SetTemp"]!="NOT_EXITS"):
+                set_device_temp = data["SetTemp"]
+                self._set_temperature(set_device_temp)
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+            # print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = self._get_temperature()
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            # print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(
+                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._get_temperature()} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
 
 
     # Getting the current switch status of devices 
     def _get_switch_status(self):
-        pass
+        return self._switch_status
 
-    # Setting the the switch of devices
+    # Setting the switch of devices
     def _set_switch_status(self, switch_state):
-        pass
+        self._switch_status=switch_state
 
     # Getting the temperature for the devices
     def _get_temperature(self):
-        pass        
+        return self._temperature
 
     # Setting up the temperature of the devices
     def _set_temperature(self, temperature):
-        pass
+        self._temperature=temperature
     

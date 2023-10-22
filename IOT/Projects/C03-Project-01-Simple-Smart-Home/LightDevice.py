@@ -166,21 +166,121 @@ class Light_Device():
             time.sleep(1)
             self.client.publish("devices", json.dumps(message))
 
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "DEVICE_ID" and (device_id == self._device_id):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+            print(
+                f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason} \n")
+
+
+            if (data["SetIntensity"]!="NOT_EXITS"):
+                set_light_intensity = data["SetIntensity"]
+                self._set_light_intensity(set_light_intensity)
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = self._get_light_intensity()
+            message["device_room_temp"] = "NOT_EXITS"
+
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} REPLY\n")
+            print(f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} REPLY\n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "DEVICE_TYPE" and (device_type == self._device_type):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+
+            if (data["SetIntensity"] != "NOT_EXITS"):
+                set_light_intensity = data["SetIntensity"]
+                self._set_light_intensity(set_light_intensity)
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+            # print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = self._get_light_intensity()
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            # print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(
+                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
+        elif (Edge_command == "SET_STATUS") and Call_Reason == "ROOM" and (device_room == self._room_type):
+            # INCOMING MESSAGE DATA
+            device_reg_id = self._device_id
+            device_type = self._device_type
+            device_room = self._room_type
+            Edge_Command = data["Edge_Command"]
+
+            if (data["SetIntensity"] != "NOT_EXITS"):
+                set_light_intensity = data["SetIntensity"]
+                self._set_light_intensity(set_light_intensity)
+
+            set_device_switch = data["SetSwitch"]
+            self._set_switch_status(set_device_switch)
+
+            # print(f"<<<<<<<-------------EDGE TO DEVICE Device:{device_reg_id} , Type:{device_type} , Room:{device_room} CMD:{Edge_Command} CALL_REASON:{Call_Reason}\n")
+
+            # Prepare OUTGOING MESSAGE DATA
+            message = {}
+            message["timestamp"] = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            message["device_id"] = self._device_id
+            message["device_type"] = self._device_type
+            message["device_room"] = self._room_type
+            message["device_status"] = self._get_switch_status()
+            message["device_intensity"] = self._get_light_intensity()
+            message["device_request"] = "SET_STATUS_REPLY"
+            Edge_Command = data["Edge_Command"]
+            # print(f"---------->>>>>>>>>> DEVICE TO EDGE Device:{self._device_id} , Type:{self._device_type} , Room:{self._room_type} CMD:{Edge_Command} CALL_REASON:{Call_Reason} REPLY\n")
+            print(
+                f"STATUS Device:{device_reg_id} , Type:{device_type} , Room:{device_room} ,SwitchState:{self._switch_status} Device Intensity:{self._light_intensity} CMD:{Edge_command} CALL_REASON:{Call_Reason} \n")
+            time.sleep(1)
+            self.client.publish("devices", json.dumps(message))
+
+
 
 
 
     # Getting the current switch status of devices
     def _get_switch_status(self):
-        pass
+        return self._switch_status
 
     # Setting the the switch of devices
     def _set_switch_status(self, switch_state):
-        pass
+         self._switch_status=switch_state
 
     # Getting the light intensity for the devices
     def _get_light_intensity(self):
-        pass
+        return self._light_intensity
 
     # Setting the light intensity for devices
     def _set_light_intensity(self, light_intensity):
-        pass    
+        self._light_intensity=light_intensity
