@@ -1,0 +1,147 @@
+What are SOLID Principles?
+ - These are standard guideliness
+to design and write code across any
+programming language SO THAT
+the "design life span is higher"
+=============================
+Tech Currency
+C# -> golang and NodeJS
+=============================
+S -> SRP
+What?
+SRP is one of the SOLID Principle
+ - A class should do a specific
+   task.
+ - A class should be managing ONLY
+   a specific funtionality.
+
+How? (75% technical and 25% Domain)
+ - Explore a class and discard the 
+   functionality that are NOT related 
+   to that class.
+ - Explore the LLD and user journey of 
+   the product.
+Split 1 class in to 3 for SRP
+You could write a 4th class and add all
+3 as dependency (Decide on Coupling).
+=====================================
+Idea : Hypothetically as part of writing
+a class can we annotate the specific
+product sub domain where this class 
+fits in.
+======================================
+O -> OCP
+Open for Extension and 
+Closed for Modification.
+What?
+ - Just because you need to implement
+   a new feature in to an existing product
+   don't mess with the existing code.
+ - Fixing is bug on an 
+   existing product is NOT voilating OCP.
+   
+Open for Extension + Closed for Modification
+ - Reduce Testing / Regression on a Production
+   code which is working fine.
+
+How?
+ - O -> Creating a base class
+        Inheritence / IS-A Relationship.
+ - C -> Creating Derived classes for specific
+        problem.
+Is Closed for Modification also indirectly
+implementing SRP?.
+OCP Promotes Inheritance.
+
+L -> Liskov Substitution Principle
+What?
+ - A base class can be replaced / substitured 
+   by the derived class in a product. As a
+   result the product behavior needs to be
+   retained or working as expected.
+ - Derived class needs to 
+   honor all the methods of the base class.
+Liskov Promotes Inheritance.
+
+How?
+ - Implement Inheritance correctly.
+ - Keep in mind the legacy consumers
+   of the product.
+
+pycharm 2022.3.3 IS-A pycharm 2022.3.2
+
+I -> ISP
+Interface Seggregation Principle
+What?
+ - Give the client ONLY what he asked for.
+ - Giving ONLY what the client requests/seeks
+   is ISP.
+ - ISP is iterative and we cannot get it
+   done 100% the first time.
+
+How?
+ - Think about the clients 
+   (client needs/Interface for the client needs)
+ - Interfaces / Pure Abstract classes will pave way
+   for ISP in your LLD / Product.
+ - Think about Generalization from the client
+   prespective.
+
+D -> DIP
+Dependency Inversion Principle
+
+What?
+ - Always rely on abstractions instead
+   of concrete implementations.
+ - Any switch in concrete implementation has
+   no effect on client since he is dependent
+   on the abstraction
+ - Never depend on concrete classes directly.
+
+How?
+ - Create Base classes or Interfaces.
+ - Ensure the client is accessing the
+   implementation using the "base class"
+   or the Interface.
+
+==========================================
+Bundle the executable / msi
+ - Clients used to Install and Run the product
+   on their servers.
+ - Shipping business logic as part of our
+   installation.
+
+Thin Client
+ - No BL in Client and the client
+   can call a server to do execute the
+   BL.
+
+SOA ( Service Oriented Architecture )
+ - No Client installed / available at customer Infra.
+ - Call an API or endpoint (Service)
+   GET https://somecompany.com/apis/v1/customers/{id}
+
+Monolith Application - Writing All BL in to services and were deploying
+it on ONE Server and also used 1 DB.
+1 DB -> 2 Tables (Customer, Vendor)
+One Service -> 2 Tables of the Same DB.
+
+Microservices
+ - Splitting the services in to multiple along
+   with its OWN database.
+2 DB ( 1 for Customer and 1 for Vendor )
+
+Customer Microservice -> Customer DB
+Vendor Microservice -> vendor DB
+
+======================================
+Java
+Source Code
+Compilation -> Parse your files and say its all fine.
+Build -> Bundles your code in to something
+         that can be consumed 
+         by the "runtime"
+runtime -> When that application is run.
+Java : JAR (library), WAR (web archives)
+JVM -> Windows / MAC / Linux
+========================================
