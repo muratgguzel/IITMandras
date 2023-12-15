@@ -1,0 +1,22 @@
+# Package Overview
+package_name: IoTAnalytics
+Raw_Dynamo_Table : BSM_raw_data
+Aggregate_Dynamo_Table: BSM_aggregate_data
+Anomaly_Dynamo_Table: BSM_anomaly_data
+WaitTime: 1
+Anomaly_Time_Check_Interval: 60
+Resource: dynamodb
+HS_ALARM_MIN: 66
+HS_ALARM_MAX: 85
+OS_ALARM_MIN: 10
+OS_ALARM_MAX: 30
+TEMP_ALARM_MIN: 78
+TEMP_ALARM_MAX: 90
+deviceid1: BS_G101
+deviceid2: BS_G102
+
+
+StartTime: 2023-12-14 14:41:50.447273
+EndTime:   2023-12-14 15:41:50.447273
+
+
