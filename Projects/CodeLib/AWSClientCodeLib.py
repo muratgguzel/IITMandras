@@ -144,3 +144,211 @@ data = yf.download("MSFT", start= yesterday, end= today, interval = '1h' )
 
 
 ## Add your code here to push data records to Kinesis stream.
+
+
+
+#LAMBDA FUNCTION
+
+from pprint import pprint
+import boto3
+import json
+import csv
+import datetime
+import os
+import random
+import base64
+
+
+def lambda_handler(event, context):
+    dynamodb_res = boto3.resource('dynamodb', region_name='us-east-1')
+
+    for record in event['records']:
+        payload = base64.b64decode(record['data'])
+        payload = str(payload, 'utf-8')
+        pprint(payload, sort_dicts=False)
+
+        payload_std = payload.replace('DEVICEID', 'deviceid').replace('DATATYPE', 'datatype').replace('COL_TIMESTAMP',
+                                                                                                      'timestamp').replace(
+            'COL_VALUE', 'value')
+
+        payload_rec = json.loads(payload_std)
+        pprint(payload_rec, sort_dicts=False)
+
+        table = dynamodb_res.Table('BedsideAnomalies')
+        response = table.put_item(Item=payload_rec)
+
+        client = boto3.client('sns', region_name='us-east-1')
+        topic_arn = "arn:aws:sns:us-east-1:007164637643:Project5_SNS:d5dbff4e-86fe-46ef-8818-72155a4d4a9f"
+
+        try:
+            client.publish(TopicArn=topic_arn, Message="heart rate detected over 90", Subject="heartrate90+")
+            result = 1
+        except Exception:
+            result = 0
+
+    return result
+
+
+#Second Lambda Function
+
+from pprint import pprint
+import boto3
+import json
+import csv
+import datetime
+import os
+import random
+
+
+def lambda_handler(event, context):
+    dynamodb_res = boto3.resource('dynamodb', region_name='us-east-1')
+
+    eventText = json.dumps(event)
+
+    standardized = eventText.replace('datatype', 'type').replace('deviceid', 'device_id')
+    standardized_data = json.loads(standardized)
+
+    table = dynamodb_res.Table('BedsideStandardized')
+    response = table.put_item(Item=standardized_data)
+
+    pprint(response, sort_dicts=False)
+
+
+    import json
+
+def lambda_handler(event, context):
+    
+    dynamodb_res = boto3.resource('dynamodb', region_name='us-east-1')
+    
+    for record in event['records']:
+        payload = base64.b64decode(record['data'])
+        payload = str(payload, 'utf-8')
+        pprint(payload, sort_dicts=False)
+        
+        payload_rec = json.loads(payload)
+        
+        table = dynamodb_res.Table('Project5_DynomoDb')
+        response = table.put_item(Item=payload_rec)
+    
+    return result
+
+
+import json
+import boto3
+import base64
+from decimal import Decimal
+
+# Initialize a DynamoDB client
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Project5_DynomoDb')  # Replace 'StockPrices' with your table name
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        # Kinesis data is base64 encoded so decode here
+        encoded_data = record["kinesis"]["data"]
+        decoded_data = base64.b64decode(encoded_data)
+        payload = json.loads(decoded_data)
+        
+        # Convert to Decimal for DynamoDB compatibility
+        payload["price"] = Decimal(str(payload["price"]))
+        payload["52WeekHigh"] = Decimal(str(payload["52WeekHigh"]))
+        payload["52WeekLow"] = Decimal(str(payload["52WeekLow"]))
+        
+        # Insert into DynamoDB
+        table.put_item(Item=payload)
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Successfully processed records.')
+    }
+
+
+LAST WORKING Code
+
+
+import json
+import boto3
+import base64
+from decimal import Decimal
+
+# Initialize a DynamoDB client
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Project5_DynomoDb')  # Ensure this is your table name
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        # Kinesis data is base64 encoded so decode here
+        encoded_data = record["kinesis"]["data"]
+        decoded_data = base64.b64decode(encoded_data)
+        payload = json.loads(decoded_data)
+        
+        # Convert numeric values to Decimal for DynamoDB compatibility
+        payload["price"] = Decimal(str(payload["price"]))
+        payload["52WeekHigh"] = Decimal(str(payload["52WeekHigh"]))
+        payload["52WeekLow"] = Decimal(str(payload["52WeekLow"]))
+        
+        # Ensure price_timestamp is properly formatted as a string (assuming it is already)
+        # If it's not a string, convert or format it as needed
+        payload["price_timestamp"] = str(payload["price_timestamp"])
+        
+        # Insert into DynamoDB
+        table.put_item(Item=payload)
+    
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Successfully processed records.')
+    }
+
+
+import json
+import boto3
+import base64
+from decimal import Decimal
+
+# Initialize a DynamoDB client
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Project5_DynomoDb')  # Ensure this is your table name
+
+# Initialize the SNS client
+sns_client = boto3.client('sns', region_name='us-east-1')
+
+topic_arn = "arn:aws:sns:us-east-1:007164637643:Project5_SNS"
+
+def lambda_handler(event, context):
+    for record in event['Records']:
+        # Kinesis data is base64 encoded so decode here
+        encoded_data = record["kinesis"]["data"]
+        decoded_data = base64.b64decode(encoded_data)
+        payload = json.loads(decoded_data)
+        
+        # Convert numeric values to Decimal for DynamoDB compatibility
+        price = Decimal(str(payload["price"]))
+        high_52week = Decimal(str(payload["52WeekHigh"]))
+        low_52week = Decimal(str(payload["52WeekLow"]))
+        
+        # Calculate thresholds
+        within_twenty_percent_of_high = high_52week * Decimal('0.80') <= price <= high_52week
+        within_twenty_five_percent_of_low = low_52week <= price <= low_52week * Decimal('1.25')
+
+        # Check if the price is within the specified range using "or"
+        if within_twenty_percent_of_high or within_twenty_five_percent_of_low:
+            # Update payload with Decimal types
+            payload["price"] = price
+            payload["52WeekHigh"] = high_52week
+            payload["52WeekLow"] = low_52week
+            payload["price_timestamp"] = str(payload["price_timestamp"])  # Ensure price_timestamp is formatted as a string
+            
+            # Insert into DynamoDB
+            table.put_item(Item=payload)
+
+            # Construct the message for SNS notification
+            message = f"Stock {payload['stockid']} is currently priced at {price}, meeting one of the targeted criteria: " \
+                      f"either within 20% of the 52-week high or within 25% of the 52-week low."
+
+            # Publish to SNS topic
+            sns_client.publish(TopicArn=topic_arn, Message=message)
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Successfully processed records.')
+    }
