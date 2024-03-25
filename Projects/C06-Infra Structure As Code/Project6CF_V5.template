@@ -1,0 +1,235 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Template to create EC2 Instance, Kinesis Stream, DynamoDB Table, SNS Topic, S3 Bucket, and IAM Role with full access permissions, setup CodeDeploy agent, and establish trust relationship for CodeDeploy.",
+  "Resources": {
+    "Project6EC2": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-0c7217cdde317cfec",
+        "InstanceType": "t2.micro",
+        "KeyName": "Project6_Key_Pair",
+        "SecurityGroupIds": [
+          {
+            "Ref": "Project6SecurityGroup"
+          }
+        ],
+        "IamInstanceProfile": {
+          "Ref": "InstanceProfile"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Sub": "#!/bin/bash\nsudo apt update\nsudo apt install -y ruby-full\nsudo apt install -y wget\ncd /home/ubuntu\nwget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install\nchmod +x ./install\nsudo ./install auto\nsudo service codedeploy-agent status"
+          }
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Project6EC2"
+          }
+        ]
+      }
+    },
+    "Project6SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow SSH and HTTP",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "Project6Kinesis": {
+      "Type": "AWS::Kinesis::Stream",
+      "Properties": {
+        "ShardCount": 1,
+        "Name": "Project6Kinesis"
+      }
+    },
+    "project6dynamodb": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "project6dynamodb",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "deviceid",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "deviceid",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        }
+      }
+    },
+    "m03p02anomalyalerts": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "m03p02anomalyalerts",
+        "TopicName": "m03p02anomalyalerts"
+      }
+    },
+    "projectcloudfrmbucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": "projectcloudfrmbucket"
+      }
+    },
+    "Project6Role": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": ["ec2.amazonaws.com", "codedeploy.amazonaws.com"]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "S3AccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "DynamoDBAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "dynamodb:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "CloudWatchAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "cloudwatch:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "LambdaAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "lambda:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "CodeDeployFullAccessPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "codedeploy:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "InstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "Project6Role"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "EC2InstanceId": {
+      "Description": "The Instance ID of the EC2 instance",
+      "Value": {
+        "Ref": "Project6EC2"
+      }
+    },
+    "SecurityGroupId": {
+      "Description": "The ID of the Security Group",
+      "Value": {
+        "Ref": "Project6SecurityGroup"
+      }
+    },
+    "KinesisStreamARN": {
+      "Description": "The ARN of the Kinesis Stream",
+      "Value": {
+        "Fn::GetAtt": ["Project6Kinesis", "Arn"]
+      }
+    },
+    "DynamoDBTableARN": {
+      "Description": "The ARN of the DynamoDB Table",
+      "Value": {
+        "Fn::GetAtt": ["project6dynamodb", "Arn"]
+      }
+    },
+    "SNSTopicARN": {
+      "Description": "The ARN of the SNS Topic",
+      "Value": {
+        "Ref": "m03p02anomalyalerts"
+      }
+    },
+    "S3BucketName": {
+      "Description": "The name of the S3 Bucket",
+      "Value": {
+        "Ref": "projectcloudfrmbucket"
+      }
+    },
+    "IAMRoleARN": {
+      "Description": "The ARN of the IAM Role",
+      "Value": {
+        "Fn::GetAtt": ["Project6Role", "Arn"]
+      }
+    }
+  }
+}

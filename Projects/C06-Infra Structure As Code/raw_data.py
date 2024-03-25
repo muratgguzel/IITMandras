@@ -7,7 +7,7 @@ import datetime
 import sched
 
 
-KINESIS_DATA_STREAM = "m03p02_raw_data_stream"
+KINESIS_DATA_STREAM = "Project6Kinesis"
 
 kinesis_handle = boto3.client('kinesis', region_name = "us-east-1")
 
@@ -44,13 +44,13 @@ loopCount = 0
 print("Data push to kinesis stream started")
 
 while True:
-    try :
-    	scheduler.enterabs(now+loopCount, 1, publishDummyData, (loopCount,))
-    	loopCount += 1
-    	scheduler.run()
+    try:
+        scheduler.enterabs(now+loopCount, 1, publishDummyData, (loopCount,))
+        loopCount += 1
+        scheduler.run()
     except KeyboardInterrupt:
         break
 
-print("Data push to kinesis stream has stopped")
 
+print("Data push to kinesis stream has stopped")
 

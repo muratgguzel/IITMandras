@@ -1,0 +1,192 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Template to create EC2 Instance, Kinesis Stream, DynamoDB Table, SNS Topic, S3 Bucket,
+  IAM Role with full access permissions, setup CodeDeploy agent, establish trust relationship
+  for CodeDeploy, and include a Lambda function for processing Kinesis data and connecting to SNS
+  with success notifications, with specified DynamoDB access for Lambda.
+
+Resources:
+  Project6EC2:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-0c7217cdde317cfec"
+      InstanceType: "t2.micro"
+      KeyName: "Project6_Key_Pair"
+      SecurityGroupIds:
+        - Ref: "Project6SecurityGroup"
+      IamInstanceProfile:
+        Ref: "InstanceProfile"
+      UserData:
+        Fn::Base64:
+          Fn::Sub: |
+            #!/bin/bash
+            sudo apt update
+            sudo apt install -y ruby-full
+            sudo apt install -y wget
+            cd /home/ubuntu
+            wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
+            chmod +x ./install
+            sudo ./install auto
+            sudo service codedeploy-agent status
+      Tags:
+        - Key: "Name"
+          Value: "Project6EC2"
+
+  Project6SecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Allow SSH and HTTP"
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: "tcp"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+
+  Project6Kinesis:
+    Type: "AWS::Kinesis::Stream"
+    Properties:
+      ShardCount: 1
+      Name: "Project6Kinesis"
+
+  project6dynamodb:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "project6dynamodb"
+      AttributeDefinitions:
+        - AttributeName: "deviceid"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "deviceid"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 20
+        WriteCapacityUnits: 20
+
+  m03p02anomalyalerts:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      DisplayName: "m03p02anomalyalerts"
+      TopicName: "m03p02anomalyalerts"
+
+  projectcloudfrmbucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "projectcloudfrmbucket"
+
+  Project6Role:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: ["ec2.amazonaws.com", "codedeploy.amazonaws.com"]
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "AdminAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: "*"
+                Resource: "*"
+
+  InstanceProfile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties:
+      Path: "/"
+      Roles:
+        - Ref: "Project6Role"
+
+  Project6LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: 'LambdaExecutionPolicy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: 'arn:aws:logs:*:*:*'
+              - Effect: Allow
+                Action:
+                  - 'kinesis:GetRecords'
+                  - 'kinesis:GetShardIterator'
+                  - 'kinesis:DescribeStream'
+                  - 'kinesis:ListStreams'
+                Resource: !GetAtt Project6Kinesis.Arn
+              - Effect: Allow
+                Action:
+                  - 'sns:Publish'
+                Resource: !Ref m03p02anomalyalerts
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:DeleteItem'
+                Resource: !GetAtt project6dynamodb.Arn
+
+  Project6LambdaFnc:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: 'anomaly_detection.lambda_handler'
+      Role: !GetAtt Project6LambdaExecutionRole.Arn
+      Runtime: 'python3.8'
+      Code:
+        S3Bucket: "project6lambdainitiationbucket"
+        S3Key: "anomaly_detection.zip"
+
+  Project6LambdaEventSourceMapping:
+    Type: 'AWS::Lambda::EventSourceMapping'
+    Properties:
+      BatchSize: 100
+      EventSourceArn: !GetAtt Project6Kinesis.Arn
+      FunctionName: !GetAtt Project6LambdaFnc.Arn
+      StartingPosition: 'LATEST'
+    DependsOn: "Project6LambdaFnc"
+
+Outputs:
+  EC2InstanceId:
+    Description: "The Instance ID of the EC2 instance"
+    Value: !Ref Project6EC2
+  SecurityGroupId:
+    Description: "The ID of the Security Group"
+    Value: !Ref Project6SecurityGroup
+  KinesisStreamARN:
+    Description: "The ARN of the Kinesis Stream"
+    Value: !GetAtt Project6Kinesis.Arn
+  DynamoDBTableARN:
+    Description: "The ARN of the DynamoDB Table"
+    Value: !GetAtt project6dynamodb.Arn
+  SNSTopicARN:
+    Description: "The ARN of the SNS Topic"
+    Value: !Ref m03p02anomalyalerts
+  S3BucketName:
+    Description: "The name of the S3 Bucket"
+    Value: !Ref projectcloudfrmbucket
+  IAMRoleARN:
+    Description: "The ARN of the IAM Role"
+    Value: !GetAtt Project6Role.Arn
+  Project6LambdaFunctionArn:
+    Description: "ARN of the Lambda function"
+    Value: !GetAtt Project6LambdaFnc.Arn
