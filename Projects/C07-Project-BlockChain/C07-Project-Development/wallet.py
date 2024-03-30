@@ -24,7 +24,6 @@ class Wallet:
     def __generate_keys(self):
         # Problem Statement 1.a.i
         # Check if the _generate_key is True or not
-
         if (self._generate_key == True):
             self.__private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
             self.public_key = self.__private_key.public_key()
@@ -36,18 +35,17 @@ class Wallet:
             # Serialize to file public key
             filename_new_public_key = self.user + "_public_key.pem"
             self.serialize_public_key_to_file(filename_new_public_key)
-
+            # Serialize to file public key
         else:
-            filename_private_key = self.user + "_private_key.pem"
-            self.deserialize_private_key_from_file(filename_private_key)
-            filename_public_key=self.user + "_public_key.pem"
-            self.deserialize_public_key_from_file(filename_public_key)
-
+            self.public_key=''
+            self.__private_key=''
 
     def initiate_transaction(self, receiver, coins):
         # Problem Statement 1.b
         # Check whether __private_key is valid or not
-
+        if not self.__private_key:
+            print("Private key not found. Transaction cannot be initiated")
+            return
         transaction = {'sender': self.user, "receiver": receiver, "coins": coins}
         # This function digitally signs a transaction.
         # This has the following steps
@@ -56,6 +54,7 @@ class Wallet:
         transaction_jsonified = json.dumps(transaction)
         # print(transaction_jsonified)
         # 2. Change this string to a byte stream. Call the function encode() to encode the string in utf-8 format
+        
         transaction_jsonified_to_bytes = transaction_jsonified.encode()
         # print(transaction_jsonified_to_bytes)
         # 3. Digitally sign the transaction
@@ -182,8 +181,8 @@ if __name__ == "__main__":
 
     # Problem Statement 1.a 
     # Argument generate_key can be added 
-    sunil_wallet = Wallet('Sunil', node_1)
-    harsh_wallet = Wallet('Harsh', node_1)
+    sunil_wallet = Wallet('Sunil', node_1, generate_key=True)
+    harsh_wallet = Wallet('Harsh', node_1,  generate_key=True)
     dodo.register_wallet(sunil_wallet.user, sunil_wallet.public_key)
     dodo.register_wallet(harsh_wallet.user, harsh_wallet.public_key)
 
