@@ -6,7 +6,7 @@ import json
 class Block:
     # Problem Statement 3.b.iii
     # Add a parameter version
-    def __init__(self, index, transactions, previous_block_hash, difficulty_level=1, metadata=''):
+    def __init__(self, index, transactions, previous_block_hash,version,difficulty_level=1, metadata=''):
         self._index = index
 
         # Problem Statement 3.b.iii
@@ -20,10 +20,11 @@ class Block:
         self._difficulty_level = difficulty_level
         self._block_hash = ''
         self._transactions = transactions
-
         # Problem Statement 3.a.i
         # Create an instance variable _transaction_counter which is set to the length of the transactions list
-
+        self._transaction_counter = len(transactions)
+        self._version = version
+        
     def __str__(self):
         return f'\nBlock index: {self._index}' \
                f'\nTimestamp: {self._timestamp}' \
@@ -33,10 +34,12 @@ class Block:
                f'\nNonce: {self._nonce}' \
                f'\nDifficulty level: {self._difficulty_level}' \
                f'\nBlock Hash: {self._block_hash}' \
-               f'\nTransactions: {self._transactions}'
+               f'\nTransactions: {self._transactions}' \
+               f'\nVersion: {self._version}' \
+               f'\nVersion: {self._transaction_counter}' \
                # Problem Statement 3.b.iii
                # Add _version
-        
+               
                # Problem Statement 3.a.i
                # Add _transaction_counter
                 
@@ -46,7 +49,13 @@ class Block:
     @property
     def block_hash(self):
         return self._block_hash
+    
 
+    @property
+    def get_previous_hash(self):
+        return self._previous_block_hash  
+    
+    
     # Now this function generates hash based on the difficulty level of block.
     # Problem Statement 2.a
     # Change this function so that it returns the hash_value
@@ -60,10 +69,12 @@ class Block:
                 str(self._metadata),
                 str(self._merkle_root),
                 str(self._nonce),
-                str(self._difficulty_level)
+                str(self._difficulty_level),
                 # Problem Statement 3(c)
                 # Add version
                 # Add _transaction_counter
+                str(self._version),
+                str(self._transaction_counter)
                 
             ])
             encoded_hash_string = hash_string.encode('utf-8')
