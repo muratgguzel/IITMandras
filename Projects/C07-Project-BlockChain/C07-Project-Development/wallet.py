@@ -11,7 +11,7 @@ from cryptography.hazmat.primitives import serialization
 class Wallet:
     # Problem Statement 1.a
     # Add a new default parameter generate_key
-    def __init__(self, user, node=None, generate_key=False):
+    def __init__(self, user, node=None, generate_key=True):
         self.user = user
         self.__private_key = ''
         self.public_key = ''
@@ -24,6 +24,7 @@ class Wallet:
     def __generate_keys(self):
         # Problem Statement 1.a.i
         # Check if the _generate_key is True or not
+
         if (self._generate_key == True):
             self.__private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
             self.public_key = self.__private_key.public_key()
@@ -35,17 +36,21 @@ class Wallet:
             # Serialize to file public key
             filename_new_public_key = self.user + "_public_key.pem"
             self.serialize_public_key_to_file(filename_new_public_key)
-            # Serialize to file public key
+        #Getting keys from existing
         else:
-            self.public_key=''
-            self.__private_key=''
+            filename_private_key = self.user + "_private_key.pem"
+            self.deserialize_private_key_from_file(filename_private_key)
+            filename_public_key=self.user + "_public_key.pem"
+            self.deserialize_public_key_from_file(filename_public_key)
 
     def initiate_transaction(self, receiver, coins):
+        
         # Problem Statement 1.b
         # Check whether __private_key is valid or not
         if not self.__private_key:
             print("Private key not found. Transaction cannot be initiated")
             return
+        
         transaction = {'sender': self.user, "receiver": receiver, "coins": coins}
         # This function digitally signs a transaction.
         # This has the following steps
@@ -76,7 +81,9 @@ class Wallet:
         # Instead of returning the transaction, it will be passed to the associated node for validation.
         if self.associated_node:
             self.associated_node.add_new_transaction(new_transaction)
-
+        else:
+            return new_transaction
+        
     def serialize_private_key(self):
         private_key_pem = self.__private_key.private_bytes(encoding=serialization.Encoding.PEM,
                                                            format=serialization.PrivateFormat.PKCS8,
@@ -181,8 +188,8 @@ if __name__ == "__main__":
 
     # Problem Statement 1.a 
     # Argument generate_key can be added 
-    sunil_wallet = Wallet('Sunil', node_1, generate_key=True)
-    harsh_wallet = Wallet('Harsh', node_1,  generate_key=True)
+    sunil_wallet = Wallet('Sunil', node_1)
+    harsh_wallet = Wallet('Harsh', node_1)
     dodo.register_wallet(sunil_wallet.user, sunil_wallet.public_key)
     dodo.register_wallet(harsh_wallet.user, harsh_wallet.public_key)
 

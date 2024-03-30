@@ -7,16 +7,15 @@ class DodoCoin:
         self._genesis_block = None
         self.wallets = {}
         self.difficulty_level = 4 # Added new attribute.
-
         # Problem Statement 3.b.i
         # Create an attribute current version
-
+        self.current_version = 3
         self.__create_genesis_block()
 
     def __create_genesis_block(self):
         # Problem Statement 3.b.ii
         # Pass an argument current version
-        self._genesis_block = Block(index=0, transactions=[], previous_block_hash=0, difficulty_level=1,
+        self._genesis_block = Block(index=0, transactions=[], previous_block_hash=0, difficulty_level=1,version=self.current_version,
                               metadata='The Times 03/Jan/2009 Chancellor on brink of second bailout for banks Genesis '
                                        'block using same string as bitcoin!')
         self._genesis_block.generate_hash()

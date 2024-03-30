@@ -11,11 +11,9 @@ class Node:
         self.node_name = name
         self.cryptocurrency = dodocoin
         self._chain = []
-        self.connected_nodes=[]
-
         # Problem Statement 4.a
         # Initialize the attribute connected_nodes as a blank list
-
+        self.connected_nodes=[]     
         self._get_chain()
 
     def __str__(self):
@@ -24,7 +22,7 @@ class Node:
     def _get_chain(self, connected_node=None):
         # Problem Statement 4.b
         # Change the if statement to check for the length of connected_nodes
-        if self.connected_nodes[0] is None:
+        if len(self.connected_nodes)==0:
             if self.cryptocurrency.genesis_block is not None:
                 self._chain.append(self.cryptocurrency.genesis_block)
         else:
@@ -39,9 +37,9 @@ class Node:
 
         # Problem Statement 4.c
         # Change the code to check for length and remove the unwanted code
-        if self.connected_nodes[0] is None:
-            self.connected_nodes.pop(0)
-        self.connected_nodes.append(node)
+        #if self.connected_nodes[0] is None:
+        if len(self.connected_nodes)==0:                
+            self.connected_nodes.append(node)
         if sync_chain is True:
             node_with_longest_chain = self._check_node_with_longest_chain()
             self._pull_chain_from_a_node(node_with_longest_chain)
@@ -59,7 +57,7 @@ class Node:
         # Problem Statement 3.b.iv
         # Pass an argument current version to the block class
         new_block = Block(index=len(self._chain), transactions=self.cryptocurrency.mem_pool,
-                          difficulty_level=self.cryptocurrency.difficulty_level,
+                          difficulty_level=self.cryptocurrency.difficulty_level,version=self.cryptocurrency.current_version,
                           previous_block_hash=self._chain[-1].block_hash, metadata='')
 
         new_block.generate_hash()
@@ -68,7 +66,7 @@ class Node:
         
         # Problem Statement 4.d
         # Change the code to check for length and remove the unwanted code
-        if self.connected_nodes[0] is not None:
+        if len(self.connected_nodes)!=0: 
             self.propagate_new_block_to_connected_nodes(new_block)
         return new_block
 
@@ -109,14 +107,16 @@ class Node:
         for connected_node in self.connected_nodes:
             connected_node.add_new_block(new_block)
 
-    def add_new_block(self, node):
-        self._chain.append(node)
+    #Modified for checking if Block is valid
+    def add_new_block(self, new_block):
+        if self.validate_block(new_block):
+            self._chain.append(new_block)
 
     def show_connected_nodes(self):
         
         # Problem Statement 4.d
         # Change the code to check for length and remove the unwanted code
-        if self.connected_nodes[0] is not None:
+        if len(self.connected_nodes)!=0: 
             print(f"{self.node_name} is connected with - ", end="")
             for _node in self.connected_nodes:
                 print(_node.node_name, end=", ")
@@ -126,7 +126,10 @@ class Node:
     # Function to validate a block before it is propagated through the chain
     # Compare the hash of the last block of this chain against the previous_hash of the new    block   
     def validate_block(self, new_block):
-        pass 
+        if self._chain[-1].block_hash == new_block.get_previous_hash:
+            return True
+        return False
+        
 
 
 if __name__ == "__main__":
